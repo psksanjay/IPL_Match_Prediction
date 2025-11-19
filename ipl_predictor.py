@@ -317,74 +317,7 @@ class IPLPredictor:
                 'confidence': max(pred_proba)
             }
         return predictions
-    #  input sections
-if st.button("Predict Winner"):
-    # Create instance of your predictor
-    predictor = IPLPredictor()
-    
-    # Prepare features dictionary (you need to define these based on your inputs)
-    features_dict = {
-        'runs_1': runs_1,
-        'wickets_1': wickets_1,
-        'extras_1': extras_1,
-        'runs_2': runs_2,
-        'wickets_2': wickets_2,
-        'extras_2': extras_2,
-        'run_difference': abs(runs_1 - runs_2),
-        'total_wickets': wickets_1 + wickets_2,
-        'total_extras': extras_1 + extras_2,
-        'high_scoring': 1 if (runs_1 + runs_2) > 350 else 0,  # Adjust threshold as needed
-        'close_match': 1 if abs(runs_1 - runs_2) <= 20 else 0,  # Adjust threshold
-        'wicket_heavy': 1 if (wickets_1 + wickets_2) >= 12 else 0  # Adjust threshold
-    }
-    
-    try:
-        # Make prediction
-        predictions = predictor.predict_match(team_1, team_2, match_data, features_dict)
-        
-        # Display results
-        st.subheader("🎯 Prediction Results")
-        
-        for model_name, pred in predictions.items():
-            with st.container():
-                st.write(f"**{model_name}**")
-                
-                # Create columns for better layout
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.metric(
-                        f"{team_1} Win Probability", 
-                        f"{pred['team1_win_prob']:.1%}"
-                    )
-                
-                with col2:
-                    st.metric(
-                        f"{team_2} Win Probability", 
-                        f"{pred['team2_win_prob']:.1%}"
-                    )
-                
-                with col3:
-                    st.metric(
-                        "Confidence", 
-                        f"{pred['confidence']:.1%}"
-                    )
-                
-                # Show predicted winner
-                winner_color = "🟢" if pred['predicted_winner'] == team_1 else "🔴"
-                st.write(f"{winner_color} **Predicted Winner:** {pred['predicted_winner']}")
-                
-                st.divider()
-        
-        # Show overall consensus
-        winners = [pred['predicted_winner'] for pred in predictions.values()]
-        consensus_winner = max(set(winners), key=winners.count)
-        st.success(f"🏆 **Overall Consensus: {consensus_winner} wins!**")
-        
-    except Exception as e:
-        st.error(f"Prediction failed: {str(e)}")
-        st.info("Make sure your models are trained first!")
-
+  
 # Streamlit App
 def main():
     st.set_page_config(page_title="IPL Match Predictor", page_icon="🏏", layout="wide")
