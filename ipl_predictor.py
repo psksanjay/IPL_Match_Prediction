@@ -307,19 +307,20 @@ class IPLPredictor:
             features_dict['high_scoring'], features_dict['close_match'], features_dict['wicket_heavy']
         ]
         
-       predictions = {}
-        for name, model in self.models.items():
-        pred_proba = model.predict_proba([features])[0]
-        pred_class = model.predict([features])[0]   # <-- THIS is the real fix
+predictions = {}
+for name, model in self.models.items():
+    pred_proba = model.predict_proba([features])[0]
+    pred_class = model.predict([features])[0]   
 
-        predictions[name] = {
-            'team1_win_prob': pred_proba[1],
-            'team2_win_prob': pred_proba[0],
-            'predicted_winner': team1 if pred_class == 1 else team2,
-            'confidence': pred_proba[pred_class]
-            }
+    predictions[name] = {
+        'team1_win_prob': pred_proba[1],
+        'team2_win_prob': pred_proba[0],
+        'predicted_winner': team1 if pred_class == 1 else team2,
+        'confidence': pred_proba[pred_class]
+    }
 
 return predictions
+
 
   
 # Streamlit App
